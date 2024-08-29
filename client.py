@@ -163,16 +163,24 @@ prompt_methods = {
 def main():
     messages = []
 
+    # selected_character = "frog"  # Method selection, can be "frog", "cow", "horse", etc.
+    # Ask user to select a character
+    print("Available characters: " + ", ".join(prompt_methods.keys()))
+    selected_character = input("Choose a character: ").strip().lower()
+
+
     while True:
         user_input = input("Enter a prompt: ")
 
-        method = "frog"  # Method selection, can be "frog", "cow", "horse", etc.
+        # process users input through character instructions
 
-        if method in prompt_methods:
-            user_input = prompt_methods[method](user_input)
-            # user_input = processPromptGeneric("🎥", user_input)
+        if selected_character in prompt_methods:
+            # character from the list
+            user_input = prompt_methods[selected_character](user_input)
+
         else:
-            raise ValueError(f"Unknown method: {method}")
+            # character not in the list
+            user_input = processPromptGeneric(selected_character, user_input)
 
         if not user_input:
             exit()
