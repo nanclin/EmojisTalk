@@ -50,3 +50,12 @@ button.emoji-button:hover {
 button.emoji-button.selected:hover{
     background-color: gray;
 }
+
+input#prompt{
+    width: 300px;
+    padding: 10px;
+}
+
+.confirm-button{
+    padding: 10px;
+}

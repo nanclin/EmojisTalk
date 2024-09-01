@@ -27,9 +27,8 @@
 
         <br><br>
         <label for="prompt">Enter Prompt:</label>
-        <textarea name="prompt" id="prompt" rows="4" cols="50">Introduce yourself</textarea>
-        <br><br>
-        <input type="submit" value="Send">
+        <input type="text" name="prompt" id="prompt" rows="4" cols="50" value="Introduce yourself"></input>
+        <input class="confirm-button" type="submit" value="Send">
 
     </form>
 
@@ -56,6 +55,14 @@
             if (!selectedEmojiInput.value) {
                 alert("Please select an emoji!");
                 event.preventDefault();
+            }
+        });
+
+        // JavaScript to handle form submission on Enter key press in the text input
+        document.getElementById('prompt').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();  // Prevent the default Enter key behavior
+                document.getElementById('emojiForm').submit();  // Submit the form programmatically
             }
         });
     </script>
