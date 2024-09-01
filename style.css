@@ -16,3 +16,37 @@ body {
 .center-card {
     margin: 0 auto;
 }
+
+button.emoji-button {
+    cursor: pointer;
+  padding: 5px;
+  margin: 5px;
+  width: 70px;
+  height: 70px;
+  font-size: 35px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+button.emoji-button.selected{
+  padding: 5px;
+  margin: 5px;
+  width: 70px;
+  height: 70px;
+  font-size: 35px;
+  background-color: gray;
+}
+
+button.emoji-button {
+  transition-duration: 0.2s;
+}
+
+button.emoji-button:hover {
+  background-color: #fff;
+  color: white;
+}
+
+button.emoji-button.selected:hover{
+    background-color: gray;
+}
