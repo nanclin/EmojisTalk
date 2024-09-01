@@ -19,43 +19,25 @@ body {
 
 button.emoji-button {
     cursor: pointer;
-  padding: 5px;
-  margin: 5px;
-  width: 70px;
-  height: 70px;
-  font-size: 35px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
+    padding: 5px;
+    margin: 5px;
+    width: 70px;
+    height: 70px;
+    font-size: 35px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+}
+.emoji-button.selected {
+    background-color: #007bff;
 }
 
-button.emoji-button.selected{
-  padding: 5px;
-  margin: 5px;
-  width: 70px;
-  height: 70px;
-  font-size: 35px;
-  background-color: gray;
-}
 
-button.emoji-button {
-  transition-duration: 0.2s;
-}
-
-button.emoji-button:hover {
-  background-color: #fff;
-  color: white;
-}
-
-button.emoji-button.selected:hover{
-    background-color: gray;
-}
-
-input#prompt{
-    width: 300px;
-    padding: 10px;
-}
-
-.confirm-button{
-    padding: 10px;
+/* Custom styling for the form and spinner */
+#loadingSpinner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
 }

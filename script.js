@@ -3,6 +3,7 @@ const emojiButtons = document.querySelectorAll('.emoji-button');
 const selectedEmojiInput = document.getElementById('selectedEmoji');
 const form = document.querySelector('form');
 const loadingSpinner = document.getElementById('loadingSpinner');
+const selectedEmojiDisplay = document.getElementById('selectedEmojiDisplay');
 
 // Add event listeners to all emoji buttons
 emojiButtons.forEach(button => {
@@ -15,6 +16,9 @@ emojiButtons.forEach(button => {
 
         // Update the hidden input value with the selected emoji
         selectedEmojiInput.value = this.dataset.emoji;
+
+        // Update the display div with the selected emoji
+        selectedEmojiDisplay.textContent = this.dataset.emoji;
     });
 });
 
@@ -38,10 +42,10 @@ form.addEventListener('submit', async (event) => {
             body: formData
         });
         const text = await response.text();
-        document.getElementById('response').textContent = text;
+        document.getElementById('response').value = text;
     } catch (error) {
         console.error('Error:', error);
-        document.getElementById('response').textContent = 'An error occurred.';
+        document.getElementById('response').value = 'An error occurred.';
     } finally {
         loadingSpinner.classList.add('d-none'); // Hide spinner
     }
