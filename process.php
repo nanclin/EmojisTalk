@@ -16,9 +16,7 @@ function chat($messages) {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        'Content-Type: application/json'
-    ]);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
 
     $output = "";
     curl_setopt($ch, CURLOPT_WRITEFUNCTION, function ($ch, $data) use (&$output) {
@@ -82,11 +80,16 @@ function processPromptGeneric($character, $prompt) {
 
 // Main processing based on form input
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $character = $_POST['character'] ?? 'generic';
-    $prompt = $_POST['prompt'] ?? '';
 
-    $formattedPrompt = processPromptGeneric($character, $prompt);
+    // Read and decode the incoming JSON payload
+    $data = json_decode(file_get_contents('php://input'), true);
     
+    $character = !empty($data['character']) ? $data['character'] : 'unknown character never to be revealed';
+    $prompt = !empty($data['prompt']) ? $data['prompt'] : 'introduce yourself';
+    $formattedPrompt = processPromptGeneric($character, $prompt);
+
+    // echo "prompt: " . $prompt . " | ";
+
     $messages = [
         ["role" => "user", "content" => $formattedPrompt]
     ];

@@ -41,3 +41,25 @@ button.emoji-button {
     transform: translate(-50%, -50%);
     z-index: 1000;
 }
+
+textarea.form-control {
+  border-radius: 50px !important;
+  padding-left: 30px !important;
+  padding-right: 30px !important;
+  padding: 0 10px;
+}
+
+input.btn.btn-primary {
+  margin: 10px;
+  border-radius: 50px !important;
+}
+
+span.input-group-text {
+  /* width: 80px; */
+  margin: 10px;
+  border-radius: 50px !important;
+}
+
+.text-center{
+    padding: 30px;
+}

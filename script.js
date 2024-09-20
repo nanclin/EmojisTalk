@@ -36,19 +36,40 @@ form.addEventListener('submit', async (event) => {
     loadingSpinner.classList.remove('d-none'); // Show spinner
 
     const formData = new FormData(form);
-    try {
-        const response = await fetch('process.php', {
-            method: 'POST',
-            body: formData
-        });
-        const text = await response.text();
-        document.getElementById('response').value = text;
-    } catch (error) {
-        console.error('Error:', error);
-        document.getElementById('response').value = 'An error occurred.';
-    } finally {
-        loadingSpinner.classList.add('d-none'); // Hide spinner
+    for (const [key, value] of formData.entries()) {
+        console.log(`form data: ${key}: ${value}`);
     }
+
+    const xhr = new XMLHttpRequest();
+
+    // Open a connection to the PHP script
+    xhr.open('POST', 'process.php', true);
+
+    // Set up the response stream handling
+    xhr.onprogress = function() {
+        // Update the webpage with each chunk of data as it's received
+        document.getElementById('response').value = xhr.responseText;
+        loadingSpinner.classList.add('d-none'); // Hide spinner
+        console.log("on progress... " + loadingSpinner);
+    };
+
+    xhr.onload = function(){
+        console.log("DONE!");
+        // document.getElementById('resultDiv').innerHTML += "DONE: "+xhr.responseText;
+    }
+
+    console.log("formData['prompt']: " + formData.get('prompt'));
+
+
+    // Send the request
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({
+        "model": "llama3.1",
+        "messages": [{ "role": "user", "content": formData.get('prompt') }],
+        "prompt": formData.get('prompt'),
+        "character": formData.get('character'),
+        "stream": true,
+    }));
 });
 
 // JavaScript to handle form submission on Enter key press in the text input
