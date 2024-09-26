@@ -4,6 +4,12 @@ const selectedEmojiInput = document.getElementById('selectedEmoji');
 const form = document.querySelector('form');
 const loadingSpinner = document.getElementById('loadingSpinner');
 const selectedEmojiDisplay = document.getElementById('selectedEmojiDisplay');
+const promptBox = document.getElementById('prompt');
+
+promptBox.addEventListener('input', function() {
+    this.style.height = 'auto'; // Reset the height
+    this.style.height = (this.scrollHeight) + 'px'; // Set it based on content
+});
 
 // Add event listeners to all emoji buttons
 emojiButtons.forEach(button => {
@@ -32,13 +38,62 @@ form.addEventListener('submit', function(event) {
 
 // Handle form submission with spinner
 form.addEventListener('submit', async (event) => {
-    event.preventDefault(); // Prevent the default form submission behavior
-    loadingSpinner.classList.remove('d-none'); // Show spinner
+
+    // Prevent the default form submission behavior
+    event.preventDefault();
+
+    // Show spinner
+    loadingSpinner.classList.remove('d-none');
 
     const formData = new FormData(form);
     for (const [key, value] of formData.entries()) {
         console.log(`form data: ${key}: ${value}`);
     }
+
+    // create new user message from input message
+
+    var userContainer = document.createElement('div');
+    userContainer.className = 'row text-end justify-content-end';
+    userContainer.innerHTML = `
+        <div class="col-9 align-items-end">
+            <span id="userLabel" class="badge p-2 mb-1 bg-primary rounded-pill shadow-sm">User:</span>
+            <p class="bg-white p-3 rounded-5 shadow-sm">${formData.get('prompt')}</p>
+        </div>
+    `;
+
+    // create new box
+    // and wait for response stream
+
+    var botContainer = document.createElement('div');
+    botContainer.className = 'row';
+    botContainer.innerHTML = `
+        <div class="col-9 ">
+            <span id="selectedEmojiDisplay" class="badge p-2 mb-1 bg-white rounded-pill shadow-sm" style="font-size:large">${selectedEmojiInput.value}</span>
+            <p id="botMessageBox" class="bg-white p-3 rounded-5 shadow-sm">...</p>
+        </div>
+    `;
+
+
+    // append
+    document.getElementById('chat').appendChild(userContainer);
+    document.getElementById('chat').appendChild(botContainer);
+
+    // reset prompt
+    promptBox.value = '';
+    promptBox.style.height = 'auto';  // Reset height to default
+    // TODO fix slim input
+    // TODO expand page height together with the textarea height
+
+
+// Optionally, if you want to reapply dynamic resizing after clearing
+promptBox.style.height = promptBox.scrollHeight*0.5 + 'px'; // Adjust height to fit any new content
+
+
+    // const element = document.getElementById('chat');
+    // element.scrollTop = element.scrollHeight;
+    window.scrollTo(0, document.body.scrollHeight);
+
+    loadingSpinner.classList.remove('d-none'); // Show spinner
 
     const xhr = new XMLHttpRequest();
 
@@ -48,14 +103,13 @@ form.addEventListener('submit', async (event) => {
     // Set up the response stream handling
     xhr.onprogress = function() {
         // Update the webpage with each chunk of data as it's received
-        document.getElementById('response').value = xhr.responseText;
+        document.getElementById('botMessageBox').textContent = xhr.responseText;
         loadingSpinner.classList.add('d-none'); // Hide spinner
         console.log("on progress... " + loadingSpinner);
     };
 
     xhr.onload = function(){
         console.log("DONE!");
-        // document.getElementById('resultDiv').innerHTML += "DONE: "+xhr.responseText;
     }
 
     console.log("formData['prompt']: " + formData.get('prompt'));
