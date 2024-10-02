@@ -5,6 +5,7 @@ const form = document.querySelector('form');
 const loadingSpinner = document.getElementById('loadingSpinner');
 const selectedEmojiDisplay = document.getElementById('selectedEmojiDisplay');
 const promptBox = document.getElementById('prompt');
+let botMessageBoxReference = null;
 
 promptBox.addEventListener('input', function() {
     this.style.height = 'auto'; // Reset the height
@@ -61,9 +62,15 @@ form.addEventListener('submit', async (event) => {
         </div>
     `;
 
+    // Remove the id right away if needed
+    if (botMessageBoxReference != null){
+        botMessageBoxReference.removeAttribute('id');
+    }else{
+        console.log("no botMessageBoxReference, is null");
+    }
+
     // create new box
     // and wait for response stream
-
     var botContainer = document.createElement('div');
     botContainer.className = 'row';
     botContainer.innerHTML = `
@@ -73,10 +80,12 @@ form.addEventListener('submit', async (event) => {
         </div>
     `;
 
-
     // append
     document.getElementById('chat').appendChild(userContainer);
     document.getElementById('chat').appendChild(botContainer);
+
+    // Store the element with id="botMessageBox" in a variable
+    botMessageBoxReference = document.getElementById('botMessageBox');
 
     // reset prompt
     promptBox.value = '';
