@@ -47,6 +47,11 @@ form.addEventListener('submit', async (event) => {
     loadingSpinner.classList.remove('d-none');
 
     const formData = new FormData(form);
+
+    // Add the character (selected emoji) value to the form data
+    const selectedEmoji = document.getElementById('selectedEmoji').value;
+    formData.append('character', selectedEmoji);  // Add emoji as "character"
+    
     for (const [key, value] of formData.entries()) {
         console.log(`form data: ${key}: ${value}`);
     }
