@@ -11,6 +11,59 @@
     </head>
     <body>
 
+        <script>
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const debugButtonsOn = urlParams.has('debug') && urlParams.get('debug') === '1';
+
+            if (debugButtonsOn){
+                // Define the array of PHP function names
+                const phpFunctions = [];
+                phpFunctions.push('debug session content');
+                phpFunctions.push('clear session');
+
+                // Dynamically create buttons for each PHP function
+                phpFunctions.forEach(functionName => {
+                    const button = document.createElement('button');
+                    button.textContent = functionName;
+                    button.addEventListener('click', function () {
+                        callPhpFunction(functionName); // Call the generic function
+                    });
+                    document.body.appendChild(button); // Append the button to the body
+                });
+
+                // Generic function to call the specified PHP function via AJAX
+                function callPhpFunction(functionName) {
+                    fetch('process.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `function=${encodeURIComponent(functionName)}`
+                    })
+                    .then(response => {
+                        // First, try to read the response as JSON
+                        return response.json().then(data => {
+                            // Successfully parsed as JSON
+                            return data;
+                        }).catch(err => {
+                            // If JSON parsing fails, read it as plain text
+                            return response; // Return the plain text response
+                        });
+                    })
+                    .then(data => {
+                        // Display the response from PHP in the <pre> element
+                        document.getElementById('output').innerText = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+                    })
+                    .catch(error => console.error('Error:', error));
+                }
+            }
+        </script>
+
+        <!-- Area to display the PHP output -->
+        <pre id="output"></pre>
+
+
         <!-- title -->
         <div class="container-fluid p-0">
             <div class="row">

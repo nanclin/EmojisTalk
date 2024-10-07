@@ -3,7 +3,7 @@ const emojiButtons = document.querySelectorAll('.emoji-button');
 const selectedEmojiInput = document.getElementById('selectedEmoji');
 const form = document.querySelector('form');
 const loadingSpinner = document.getElementById('loadingSpinner');
-const selectedEmojiDisplay = document.getElementById('selectedEmojiDisplay');
+let selectedEmojiDisplay = document.getElementById('selectedEmojiDisplay');
 const promptBox = document.getElementById('prompt');
 let botMessageBoxReference = null;
 
@@ -23,9 +23,6 @@ emojiButtons.forEach(button => {
 
         // Update the hidden input value with the selected emoji
         selectedEmojiInput.value = this.dataset.emoji;
-
-        // Update the display div with the selected emoji
-        selectedEmojiDisplay.textContent = this.dataset.emoji;
     });
 });
 
@@ -80,7 +77,7 @@ form.addEventListener('submit', async (event) => {
     botContainer.className = 'row';
     botContainer.innerHTML = `
         <div class="col-9 ">
-            <span id="selectedEmojiDisplay" class="badge p-2 mb-1 bg-white rounded-pill shadow-sm" style="font-size:large">${selectedEmojiInput.value}</span>
+            <span class="badge p-2 mb-1 bg-white rounded-pill shadow-sm" style="font-size:large">${selectedEmojiInput.value}</span>
             <p id="botMessageBox" class="bg-white p-3 rounded-5 shadow-sm">...</p>
         </div>
     `;
@@ -99,8 +96,8 @@ form.addEventListener('submit', async (event) => {
     // TODO expand page height together with the textarea height
 
 
-// Optionally, if you want to reapply dynamic resizing after clearing
-promptBox.style.height = promptBox.scrollHeight*0.5 + 'px'; // Adjust height to fit any new content
+    // Optionally, if you want to reapply dynamic resizing after clearing
+    promptBox.style.height = promptBox.scrollHeight*0.5 + 'px'; // Adjust height to fit any new content
 
 
     // const element = document.getElementById('chat');
@@ -127,16 +124,16 @@ promptBox.style.height = promptBox.scrollHeight*0.5 + 'px'; // Adjust height to 
     }
 
     console.log("formData['prompt']: " + formData.get('prompt'));
+    console.log("formData['character']: " + formData.get('character'));
 
 
     // Send the request
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify({
         "model": "llama3.1",
-        "messages": [{ "role": "user", "content": formData.get('prompt') }],
         "prompt": formData.get('prompt'),
         "character": formData.get('character'),
-        "stream": true,
+        "stream": true
     }));
 });
 
