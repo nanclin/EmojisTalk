@@ -7,6 +7,8 @@ let selectedEmojiDisplay = document.getElementById('selectedEmojiDisplay');
 const promptBox = document.getElementById('prompt');
 let botMessageBoxReference = null;
 let selectedEmoji;
+let userMessage;
+let botMessage;
 
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -74,7 +76,137 @@ function updateCharacterSelection(newCharacter) {
     // Call the function to clear all chat bubbles
     clearAllChatBubbles();
 
+    //
+    loadConversationHistory(newCharacter);
+
     console.log("New character selected: " + newCharacter);
+}
+
+function addToConversationHistory(character, role, message) {
+    // Retrieve the current conversation history for the character from localStorage
+    let conversationHistory = localStorage.getItem(`conversation_${character}`);
+    let convoJson;
+
+    // Check if conversation history exists
+    if (conversationHistory) {
+        convoJson = JSON.parse(conversationHistory);  // Parse existing history
+    } else {
+        convoJson = [];  // Initialize as an empty array if no history exists
+    }
+
+    // Add the new message object to the history
+    convoJson.push({
+        role: role,      // 'role' like 'user' or 'bot'
+        message: message // The actual message content
+    });
+
+    // Save the updated conversation history back to localStorage
+    localStorage.setItem(`conversation_${character}`, JSON.stringify(convoJson));
+
+    // Print the conversation history in a pretty format
+    console.log(JSON.stringify(convoJson, null, 2)); // Pretty print with 2-space indentation
+}
+
+// Function to load conversation history from localStorage for a selected character
+function loadConversationHistory(character) {
+    const convoHistory = localStorage.getItem(`conversation_${character}`);
+
+    if (convoHistory) {
+        const convoHistoryJSON = JSON.parse(convoHistory);
+        createChatBubbles(convoHistoryJSON);
+    } else {
+        console.log(`No conversation history found for character: ${character}`);
+    }
+}
+
+// Function to create chat bubbles
+function createChatBubbles(conversation) {
+
+    const chatContainer = document.getElementById('chat'); // Assuming you have a container div with id 'chat'
+
+    conversation.forEach(entry => {
+
+        if(entry.role == 'user'){
+            // Create user message container
+            const chatBubble = document.createElement('div');
+            chatBubble.className = 'row chatBubble text-end justify-content-end'; // Add necessary classes
+
+            const userColDiv = document.createElement('div');
+            userColDiv.className = 'col-9 align-items-end'; // Set column class for user
+
+            const userLabel = document.createElement('span');
+            userLabel.id = 'userLabel'; // Set ID for user label
+            userLabel.className = 'badge p-2 mb-1 bg-primary rounded-pill shadow-sm'; // Set label styling
+            userLabel.textContent = 'User:'; // Set label text
+
+            const userMessageText = document.createElement('p');
+            userMessageText.className = 'bg-white p-3 rounded-5 shadow-sm'; // Chat bubble style
+            userMessageText.textContent = entry.message; // User message content
+
+            // Append user elements to user container
+            userColDiv.appendChild(userLabel);
+            userColDiv.appendChild(userMessageText);
+            chatBubble.appendChild(userColDiv);
+            chatContainer.appendChild(chatBubble);
+        }
+        else if(entry.role == 'bot'){
+
+            // Remove the id right away if needed
+            if (botMessageBoxReference != null){
+                botMessageBoxReference.removeAttribute('id');
+            }else{
+                console.log("no botMessageBoxReference, is null");
+            }
+
+            // Create bot message container
+            const chatBubble = document.createElement('div');
+            chatBubble.className = 'row chatBubble'; // Add row class for bot message
+
+            const botColDiv = document.createElement('div');
+            botColDiv.className = 'col-9'; // Set column class for bot
+
+            const botLabel = document.createElement('span');
+            botLabel.className = 'badge p-2 mb-1 bg-white rounded-pill shadow-sm'; // Bot label styling
+            botLabel.style.fontSize = 'large'; // Set font size for bot label
+            botLabel.textContent = selectedEmojiInput.value; // Bot emoji content
+
+            const botMessageText = document.createElement('p');
+            botMessageText.id = 'botMessageBox'; // Set ID for bot message
+            botMessageText.className = 'bg-white p-3 rounded-5 shadow-sm'; // Chat bubble style
+            botMessageText.textContent = entry.message; // Initial bot message content
+
+            // Append bot elements to bot container
+            botColDiv.appendChild(botLabel);
+            botColDiv.appendChild(botMessageText);
+            chatBubble.appendChild(botColDiv);
+
+            chatContainer.appendChild(chatBubble);
+
+            // Store the element with id="botMessageBox" in a variable
+            botMessageBoxReference = document.getElementById('botMessageBox');
+        }
+    });
+}
+
+// Function to render each message (adjust this to fit your chat structure)
+function renderMessage(message) {
+    console.log("render message: " + message.content);
+    // return;
+    const chatContainer = document.getElementById('chat');
+    const messageRow = document.createElement('div');
+    messageRow.classList.add('row');
+    messageRow.classList.add('chatBubble');
+
+    const colDiv = document.createElement('div');
+    colDiv.classList.add('col-9');
+
+    const messageContent = document.createElement('p');
+    messageContent.classList.add('bg-white', 'p-3', 'rounded-5', 'shadow-sm');
+    messageContent.textContent = message.content;
+
+    colDiv.appendChild(messageContent);
+    messageRow.appendChild(colDiv);
+    chatContainer.appendChild(messageRow);
 }
 
 // Example usage inside event listener
@@ -103,6 +235,11 @@ form.addEventListener('submit', async (event) => {
     loadingSpinner.classList.remove('d-none');
 
     const formData = new FormData(form);
+    userMessage = formData.get('prompt');
+
+    //
+    if(userMessage == '')
+        userMessage = 'Introduce yourself.'
 
     // Add the character (selected emoji) value to the form data
     formData.append('character', selectedEmoji);  // Add emoji as "character"
@@ -118,7 +255,7 @@ form.addEventListener('submit', async (event) => {
     userContainer.innerHTML = `
         <div class="col-9 align-items-end">
             <span id="userLabel" class="badge p-2 mb-1 bg-primary rounded-pill shadow-sm">User:</span>
-            <p class="bg-white p-3 rounded-5 shadow-sm">${formData.get('prompt')}</p>
+            <p class="bg-white p-3 rounded-5 shadow-sm">${userMessage}</p>
         </div>
     `;
 
@@ -178,10 +315,15 @@ form.addEventListener('submit', async (event) => {
     };
 
     xhr.onload = function(){
+        botMessage = xhr.responseText;
+        console.log(botMessage);
         console.log("DONE!");
+        addToConversationHistory(selectedEmoji, 'bot', botMessage);
     }
 
-    console.log("formData['prompt']: " + formData.get('prompt'));
+    addToConversationHistory(selectedEmoji, 'user', userMessage);
+
+    console.log("formData['prompt']: " + userMessage);
     console.log("formData['character']: " + formData.get('character'));
 
 
@@ -189,7 +331,7 @@ form.addEventListener('submit', async (event) => {
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify({
         "model": "llama3.1",
-        "prompt": formData.get('prompt'),
+        "prompt": userMessage,
         "character": formData.get('character'),
         "stream": true
     }));
