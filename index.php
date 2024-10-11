@@ -34,6 +34,13 @@
 
                 // Generic function to call the specified PHP function via AJAX
                 function callPhpFunction(functionName) {
+
+                    switch(functionName){
+                        case 'clear session':
+                            localStorage.removeItem('character');
+                            break;
+                    }
+
                     fetch('process.php', {
                         method: 'POST',
                         headers: {

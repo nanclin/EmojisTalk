@@ -2,10 +2,14 @@
 
 ## NOTES
 
-- remember last selected character (session)
-- if input is empty A) dont allow to send B) send preset prompt (or list), and add it to input field
+- introduce yourself on character selection
+- ✅ remember last selected character (session)
+	- ✅ works updating button (from js localStorage)
+	- ✅ todo: update character also for chat
+	- ✅ todo: clear the chat
 - reload previous conversation (from session)
-- remove whole conversation when new character is selected
+- if input is empty A) dont allow to send B) send preset prompt (or list), and add it to input field
+- ✅ remove whole conversation when new character is selected
 - add colors like in [qewie](https://x.com/josephpalbanese/status/1841522918460620940?s=46)
 - add job or occupation (“baby president“)
 - Add characteristics (“evil carrot”)

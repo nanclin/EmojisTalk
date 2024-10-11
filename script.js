@@ -6,6 +6,56 @@ const loadingSpinner = document.getElementById('loadingSpinner');
 let selectedEmojiDisplay = document.getElementById('selectedEmojiDisplay');
 const promptBox = document.getElementById('prompt');
 let botMessageBoxReference = null;
+let selectedEmoji;
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    // Check if a character is stored in localStorage
+    const storedCharacter = localStorage.getItem('character');
+
+    if (storedCharacter) {
+        // If a character is found, load the page accordingly
+        loadPageForCharacter(storedCharacter);
+    } else {
+        // If no character is found, you can set a default behavior
+        loadDefaultPage();
+    }
+});
+
+// Function to load page based on the selected character
+function loadPageForCharacter(character) {
+    console.log(`Loading page for character: ${character}`);
+    // Add your code to modify the page for the specific character here
+    // For example, you could set the character in a form or display character-specific content
+
+    selectedEmoji = character;
+    selectedEmojiInput.value = character;
+
+    emojiButtons.forEach(button => {
+        if (button.innerHTML == character){
+            button.classList.add('selected'); // Use 'button' instead of 'this'
+        } else {
+            button.classList.remove('selected'); // Remove 'selected' class from others
+        }
+    });
+}
+
+// Function for default page load behavior
+function loadDefaultPage() {
+    console.log('No character found, loading default page.');
+    // Add your code for the default behavior here
+}
+
+function clearAllChatBubbles() {
+    const chatContainer = document.getElementById('chat'); // Get the container element
+    const rows = chatContainer.querySelectorAll('.chatBubble');   // Select all elements with class 'chatBubble'
+
+    // Loop through the rows and remove each one from the parent container
+    rows.forEach(row => {
+        row.remove();
+    });
+    console.log("all chat bubbles cleared");
+}
 
 promptBox.addEventListener('input', function() {
     this.style.height = 'auto'; // Reset the height
@@ -22,7 +72,16 @@ emojiButtons.forEach(button => {
         this.classList.add('selected');
 
         // Update the hidden input value with the selected emoji
-        selectedEmojiInput.value = this.dataset.emoji;
+        selectedEmoji = this.dataset.emoji;
+        selectedEmojiInput.value = selectedEmoji;
+
+        // Set a localStorage variable
+        localStorage.setItem('character', selectedEmoji);
+
+        console.log("new character selected: " + selectedEmoji);
+
+        // Call the function to clear all rows
+        clearAllChatBubbles();
     });
 });
 
@@ -46,7 +105,7 @@ form.addEventListener('submit', async (event) => {
     const formData = new FormData(form);
 
     // Add the character (selected emoji) value to the form data
-    const selectedEmoji = document.getElementById('selectedEmoji').value;
+    selectedEmoji = document.getElementById('selectedEmoji').value;
     formData.append('character', selectedEmoji);  // Add emoji as "character"
     
     for (const [key, value] of formData.entries()) {
@@ -56,7 +115,7 @@ form.addEventListener('submit', async (event) => {
     // create new user message from input message
 
     var userContainer = document.createElement('div');
-    userContainer.className = 'row text-end justify-content-end';
+    userContainer.className = 'row chatBubble text-end justify-content-end';
     userContainer.innerHTML = `
         <div class="col-9 align-items-end">
             <span id="userLabel" class="badge p-2 mb-1 bg-primary rounded-pill shadow-sm">User:</span>
@@ -74,7 +133,7 @@ form.addEventListener('submit', async (event) => {
     // create new box
     // and wait for response stream
     var botContainer = document.createElement('div');
-    botContainer.className = 'row';
+    botContainer.className = 'row chatBubble';
     botContainer.innerHTML = `
         <div class="col-9 ">
             <span class="badge p-2 mb-1 bg-white rounded-pill shadow-sm" style="font-size:large">${selectedEmojiInput.value}</span>

@@ -13,23 +13,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: application/json');
 
     // Switch based on the requested function
-    switch ($_POST['function']) {
-        case 'debug session content':
-            echo json_encode($_SESSION, JSON_PRETTY_PRINT);
-            exit(); // Stop any further output
+    if (isset($_POST['function'])){
+        switch ($_POST['function']) {
+            case 'debug session content':
+                echo json_encode($_SESSION, JSON_PRETTY_PRINT);
+                exit(); // Stop any further output
 
-        case 'clear session':
-            // Clear the session
-            $_SESSION = []; // Empty the session array
+            case 'clear session':
+                // Clear the session
+                $_SESSION = []; // Empty the session array
 
-            // Optionally, destroy the session completely
-            // session_destroy(); // Uncomment if you want to destroy the session entirely
-            echo json_encode(["message" => "Session cleared!"]);
-            exit();
+                // Optionally, destroy the session completely
+                // session_destroy(); // Uncomment if you want to destroy the session entirely
+                echo json_encode(["message" => "Session cleared!"]);
+                exit();
 
-        // default:
-        //     $_SESSION['debug'][] = ["dbg" => "No function by the name " . htmlspecialchars($_POST['function'])];
-        //     exit();
+            // default:
+            //     $_SESSION['debug'][] = ["dbg" => "No function by the name " . htmlspecialchars($_POST['function'])];
+            //     exit();
+        }
+    }
+    else{
+        // echo "No function by the name ";// . htmlspecialchars($_POST['function']);
     }
 }
 
