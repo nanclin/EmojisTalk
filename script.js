@@ -28,16 +28,7 @@ function loadPageForCharacter(character) {
     // Add your code to modify the page for the specific character here
     // For example, you could set the character in a form or display character-specific content
 
-    selectedEmoji = character;
-    selectedEmojiInput.value = character;
-
-    emojiButtons.forEach(button => {
-        if (button.innerHTML == character){
-            button.classList.add('selected'); // Use 'button' instead of 'this'
-        } else {
-            button.classList.remove('selected'); // Remove 'selected' class from others
-        }
-    });
+    updateCharacterSelection(character);
 }
 
 // Function for default page load behavior
@@ -62,26 +53,35 @@ promptBox.addEventListener('input', function() {
     this.style.height = (this.scrollHeight) + 'px'; // Set it based on content
 });
 
-// Add event listeners to all emoji buttons
+function updateCharacterSelection(newCharacter) {
+
+    // Update the hidden input value with the selected emoji
+    selectedEmoji = newCharacter;
+    selectedEmojiInput.value = newCharacter;
+
+    // Set a localStorage variable
+    localStorage.setItem('character', newCharacter);
+
+    // update buttons selection
+    emojiButtons.forEach(button => {
+        if (button.innerHTML == newCharacter){
+            button.classList.add('selected'); // Use 'button' instead of 'this'
+        } else {
+            button.classList.remove('selected'); // Remove 'selected' class from others
+        }
+    });
+
+    // Call the function to clear all chat bubbles
+    clearAllChatBubbles();
+
+    console.log("New character selected: " + newCharacter);
+}
+
+// Example usage inside event listener
 emojiButtons.forEach(button => {
     button.addEventListener('click', function() {
-        // Remove 'selected' class from all buttons
-        emojiButtons.forEach(btn => btn.classList.remove('selected'));
-
-        // Add 'selected' class to the clicked button
-        this.classList.add('selected');
-
-        // Update the hidden input value with the selected emoji
-        selectedEmoji = this.dataset.emoji;
-        selectedEmojiInput.value = selectedEmoji;
-
-        // Set a localStorage variable
-        localStorage.setItem('character', selectedEmoji);
-
-        console.log("new character selected: " + selectedEmoji);
-
-        // Call the function to clear all rows
-        clearAllChatBubbles();
+        // Call the reusable method
+        updateCharacterSelection(this.dataset.emoji);
     });
 });
 
@@ -105,7 +105,6 @@ form.addEventListener('submit', async (event) => {
     const formData = new FormData(form);
 
     // Add the character (selected emoji) value to the form data
-    selectedEmoji = document.getElementById('selectedEmoji').value;
     formData.append('character', selectedEmoji);  // Add emoji as "character"
     
     for (const [key, value] of formData.entries()) {
