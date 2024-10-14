@@ -5,7 +5,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Emojis Talk</title>
         <!-- Bootstrap CSS -->
-        <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="style.css"> <!-- Ensure this path is correct -->
     </head>
@@ -80,6 +79,26 @@
             </div>
         </div>
 
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Choose Your Emoji</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              
+              <div class="modal-body">
+                <div class="container m-0">
+                    <div class="row">
+                        <emoji-picker class="text-center light" style="padding: 0"></emoji-picker>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- character selection -->
         <div class="container">
             <div class="row">
@@ -101,6 +120,7 @@
                             <button type="button" class="emoji-button btn btn-light shadow-sm" data-emoji="👶">👶</button>
                             <button type="button" class="emoji-button btn btn-light shadow-sm" data-emoji="🧦">🧦</button>
                             <button type="button" class="emoji-button btn btn-light shadow-sm" data-emoji="⚽">⚽</button>
+                            <button type="button" class="emoji-button btn btn-light shadow-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">My</button>
                         </div>
                         <input type="hidden" name="character" id="selectedEmoji" value="🎥">
                     </div>
@@ -155,9 +175,12 @@
 
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Link to your external JavaScript file -->
     <script src="script.js"></script>
+    <!-- other -->
+    <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+
     </body>
 </html>

@@ -166,7 +166,7 @@ function createChatBubbles(conversation) {
             botColDiv.className = 'col-9'; // Set column class for bot
 
             const botLabel = document.createElement('span');
-            botLabel.className = 'badge p-2 mb-1 bg-white rounded-pill shadow-sm'; // Bot label styling
+            botLabel.className = 'badge text-muted p-2 mb-1 bg-white rounded-pill shadow-sm'; // Bot label styling
             botLabel.style.fontSize = 'large'; // Set font size for bot label
             botLabel.textContent = selectedEmojiInput.value; // Bot emoji content
 
@@ -343,4 +343,16 @@ document.getElementById('prompt').addEventListener('keypress', function(event) {
         event.preventDefault(); // Prevent the default Enter key behavior
         form.querySelector('input[type="submit"]').click(); // Trigger form submission programmatically
     }
+});
+
+/////
+
+document.querySelector('emoji-picker').addEventListener('emoji-click', function () {
+    console.log('Emoji clicked:', event.detail);
+    
+    var modalElement = document.getElementById('exampleModal')
+    var modal = bootstrap.Modal.getInstance(modalElement) // Returns a Bootstrap modal instance
+    modal.hide();
+
+    updateCharacterSelection(event.detail.unicode + ' ' + event.detail.emoji.shortcodes[0]);
 });
