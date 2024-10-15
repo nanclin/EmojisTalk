@@ -17,17 +17,12 @@ body {
     margin: 0 auto;
 }
 
-button.emoji-button {
-    cursor: pointer;
-    padding: 5px;
-    margin: 5px;
+.emoji-button {
     width: 70px;
     height: 70px;
     font-size: 35px;
-    border-radius: 10px;
-    border: none;
-    cursor: pointer;
 }
+
 .emoji-button.selected {
     background-color: #007bff;
 }

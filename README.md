@@ -2,6 +2,7 @@
 
 ## NOTES
 
+- when lopping through buttons, skip the emoji list one
 - disable input while loading response
 - cleanup the bot name rendering, remove text name, keep emoji
 - create list of recent emojis
@@ -15,7 +16,7 @@
 - ✅ reload previous conversation (from session)
 - ✅ if input is empty ❌ A) dont allow to send ✅ B) send preset prompt (or list), and add it to input field
 - ✅ remove whole conversation when new character is selected
-- 👉 add colors like in [qewie](https://x.com/josephpalbanese/status/1841522918460620940?s=46)
+- 👉 add colors like in [qewie](https://x.com/josephpalbanese/status/1841522918460620940?s=46) (use bootstrap color modes themes)
 - add job or occupation (“baby president“)
 - Add characteristics (“evil carrot”)
 - set temperature (how? check ollama docs) (for testing to see how prompt affects it more consistently)

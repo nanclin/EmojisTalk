@@ -112,15 +112,19 @@
                 <div class="col-sm">
                     <div class="form-group">
                         <div id="emojiButtons" class="text-center">
-                            <button type="button" class="emoji-button btn btn-light shadow-sm" data-emoji="🐸">🐸</button>
-                            <button type="button" class="emoji-button btn btn-light shadow-sm" data-emoji="🐄">🐄</button>
-                            <button type="button" class="emoji-button btn btn-light shadow-sm" data-emoji="🍉">🍉</button>
-                            <button type="button" class="emoji-button btn btn-light shadow-sm selected" data-emoji="🎥">🎥</button>
-                            <button type="button" class="emoji-button btn btn-light shadow-sm" data-emoji="💩">💩</button>
-                            <button type="button" class="emoji-button btn btn-light shadow-sm" data-emoji="👶">👶</button>
-                            <button type="button" class="emoji-button btn btn-light shadow-sm" data-emoji="🧦">🧦</button>
-                            <button type="button" class="emoji-button btn btn-light shadow-sm" data-emoji="⚽">⚽</button>
-                            <button type="button" class="emoji-button btn btn-light shadow-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">My</button>
+                            <button type="button" class="emoji-button m-1 p-1 btn btn-light shadow-sm" data-emoji="🐸">🐸</button>
+                            <button type="button" class="emoji-button m-1 p-1 btn btn-light shadow-sm" data-emoji="🐄">🐄</button>
+                            <button type="button" class="emoji-button m-1 p-1 btn btn-light shadow-sm" data-emoji="🍉">🍉</button>
+                            <button type="button" class="emoji-button m-1 p-1 btn btn-light shadow-sm selected" data-emoji="🎥">🎥</button>
+                            <button type="button" class="emoji-button m-1 p-1 btn btn-light shadow-sm" data-emoji="💩">💩</button>
+                            <button type="button" class="emoji-button m-1 p-1 btn btn-light shadow-sm" data-emoji="👶">👶</button>
+                            <button type="button" class="emoji-button m-1 p-1 btn btn-light shadow-sm" data-emoji="🧦">🧦</button>
+                            <button type="button" class="emoji-button m-1 p-1 btn btn-light shadow-sm" data-emoji="⚽">⚽</button>
+                            <button type="button" class="emoji-button m-1 p-1 btn btn-primary shadow-sm d-inline-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-chat-dots" viewBox="0 0 16 16" data-darkreader-inline-fill="" style="--darkreader-inline-fill: currentColor;">
+                                  <path d="M1 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1zM1 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1zM1 12a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1z"/>
+                                </svg>
+                            </button>
                         </div>
                         <input type="hidden" name="character" id="selectedEmoji" value="🎥">
                     </div>
