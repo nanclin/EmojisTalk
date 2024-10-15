@@ -166,9 +166,9 @@ function createChatBubbles(conversation) {
             botColDiv.className = 'col-9'; // Set column class for bot
 
             const botLabel = document.createElement('span');
-            botLabel.className = 'badge text-muted p-2 mb-1 bg-white rounded-pill shadow-sm'; // Bot label styling
+            botLabel.className = 'badge text-muted fs-3 p-2 mb-1 bg-white rounded-pill shadow-sm'; // Bot label styling
             botLabel.style.fontSize = 'large'; // Set font size for bot label
-            botLabel.textContent = selectedEmojiInput.value; // Bot emoji content
+            botLabel.textContent = selectedEmojiInput.value.split(' ')[0]; // Bot emoji content
 
             const botMessageText = document.createElement('p');
             botMessageText.id = 'botMessageBox'; // Set ID for bot message
