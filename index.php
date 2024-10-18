@@ -147,7 +147,7 @@
         </div>
 
         <!-- text input -->
-        <div id="chat" class="container">
+        <div id="chat" class="container container-small">
 
             <!-- TODO: Find a way to remove form from here, and move it to the bottom of messages -->
             <form action="process.php" method="POST" id="emojiForm">

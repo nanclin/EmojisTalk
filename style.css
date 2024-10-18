@@ -58,3 +58,10 @@ span.input-group-text {
 .text-center{
     padding: 30px;
 }
+
+@media (min-width: 900px) {
+    .container-small {
+        margin: auto;
+        width: 60%;
+    }
+} 
