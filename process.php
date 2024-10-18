@@ -45,7 +45,12 @@ function chat($messages) {
     $postData = json_encode([
         "model" => $model,
         "messages" => $messages,
-        "stream" => true
+        "stream" => true,
+        "keep_active" => -1,
+        "options" => [
+            "temperature" => 1,
+            "seed" => 123
+        ],
     ]);
 
     $ch = curl_init($apiUrl);
@@ -59,7 +64,6 @@ function chat($messages) {
     $output = "";
     curl_setopt($ch, CURLOPT_WRITEFUNCTION, function ($ch, $data) use (&$output) {
 
-        // debug_to_console($data);
         $lines = explode("\n", $data);
         foreach ($lines as $line) {
             if (trim($line)) {
@@ -92,12 +96,23 @@ function chat($messages) {
 
     $response = curl_exec($ch);
 
-    if (curl_errno($ch)) {
-        throw new Exception(curl_error($ch));
-    }
+    // Close the cURL handle
     curl_close($ch);
 
-    return json_decode($response, true);
+    // Check if the response is valid
+    if ($response === false || empty($response)) {
+        // throw new Exception('No response received from server.');
+    }
+
+    // Decode the JSON response
+    $jsonResponse = json_decode($response, true);
+
+    // Check if JSON decoding was successful
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        // throw new Exception('Failed to decode JSON: ' . json_last_error_msg());
+    }
+
+    return $jsonResponse;
 }
 
 function processPromptGeneric($character, $prompt) {
@@ -121,17 +136,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Read and decode the incoming JSON payload
     $data = json_decode(file_get_contents('php://input'), true);
-    
     $character = !empty($data['character']) ? $data['character'] : 'unknown character never to be revealed';
     $_SESSION['debug'][] = ["dbg" => $data];
     
     // reset if new character
     // this does not work
-    if ($character !== $_SESSION['character']) {
+    if (!isset($_SESSION['character']) || $character !== $_SESSION['character']) {
         $_SESSION['debug'][] = ["dbg" => "new character: " . $character];
         $_SESSION['character'] = $character;
-        $_SESSION['call_count'] = "";
-        unset($_SESSION['messages']);
+        $_SESSION['call_count'] = 0; // Reset call count for new character
+        unset($_SESSION['messages']); // Clear previous message history
     }
 
     // Initialize messages array in session if it doesn't exist
@@ -146,7 +160,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!isset($_SESSION['call_count'])) {
         $_SESSION['call_count'] = 0;
     }
-
     $_SESSION['call_count']++;
 
     // remove all system messages
@@ -166,8 +179,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $_SESSION['messages'][] = ['role' => 'user', 'content' => $prompt];
 
     $response = chat($_SESSION['messages']);
-
-    echo $response['content'] ?? 'No response from server';
 }
 
 ?>
