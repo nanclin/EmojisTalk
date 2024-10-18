@@ -82,7 +82,7 @@ function chat($messages) {
 
                 // data contains info that message is DONE
                 if (isset($body['done']) && $body['done'] === true) {
-                    $_SESSION['messages'][] = ['role' => 'bot', 'content' => $output];
+                    $_SESSION['messages'][] = ['role' => 'assistant', 'content' => $output];
                     return $output; // Return the full output
                 }
             }
