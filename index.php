@@ -37,6 +37,7 @@
                     switch(functionName){
                         case 'clear session':
                             localStorage.removeItem('character');
+                            localStorage.clear();
                             break;
                     }
 
