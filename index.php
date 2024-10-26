@@ -75,7 +75,7 @@
         <div class="container-fluid p-0">
             <div class="row">
                 <div class="col">
-                    <h1 class="text-center shadow bg-white display-4">Emojis Talk AI 🤖</h1>
+                    <h1 class="text-center shadow bg-white display-4">EmojiGPT 🤖</h1>
                 </div>
             </div>
         </div>
