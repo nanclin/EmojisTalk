@@ -37,6 +37,8 @@ function loadPageForCharacter(character) {
 function loadDefaultPage() {
     console.log('No character found, loading default page.');
     // Add your code for the default behavior here
+
+    loadPageForCharacter('🎥');
 }
 
 function clearAllChatBubbles() {
