@@ -6,78 +6,109 @@ const loadingSpinner = document.getElementById('loadingSpinner');
 let selectedEmojiDisplay = document.getElementById('selectedEmojiDisplay');
 const promptBox = document.getElementById('prompt');
 let botMessageBoxReference = null;
-let selectedEmoji;
 let userMessage;
 let botMessage;
-const startEmojiList = ["🐸", "🐄", "🍉", "💩", "👶", "🧦", "⚽", "🎥"];
-const defaultEmoji = "🎥";
-let recentEmojis = JSON.parse(localStorage.getItem('recentEmojis')) || [];
+let recentEmojisList = JSON.parse(localStorage.getItem('recentEmojisList')) || [];
+const maxButtonsCount = 5;
+
+// Modified default emoji list with metadata
+const startEmojiList = [
+    { unicode: "🐸", annotation: "frog", shortcodes: ":frog:", tags: ["animal", "amphibian"] },
+    { unicode: "🐄", annotation: "cow", shortcodes: ":cow:", tags: ["animal", "farm"] },
+    { unicode: "🍉", annotation: "watermelon", shortcodes: ":watermelon:", tags: ["fruit", "food"] },
+    { unicode: "💩", annotation: "pile of poo", shortcodes: ":poop:", tags: ["funny", "gross"] },
+    { unicode: "👶", annotation: "baby", shortcodes: ":baby:", tags: ["person", "young"] },
+    { unicode: "🧦", annotation: "socks", shortcodes: ":socks:", tags: ["clothing", "feet"] },
+    { unicode: "⚽", annotation: "soccer ball", shortcodes: ":soccer:", tags: ["sports", "ball"] },
+    { unicode: "🎥", annotation: "movie camera", shortcodes: ":movie_camera:", tags: ["film", "video"] }
+];
+
+// Update the default emoji
+const defaultEmoji = startEmojiList[7]; // Movie camera emoji with metadata
+
+// Function to format emoji info consistently
+function formatEmojiInfo(emojiData) {
+    return [
+        emojiData.annotation,
+        emojiData.unicode,
+        // emojiData.shortcodes,
+        ...(emojiData.tags || [])
+    ].join(', ');
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     initEmojiButtons();
 });
+
 // Function to initialize emoji buttons
 function initEmojiButtons() {
-    // Retrieve the last selected character from localStorage, or predefined default
-    const lastSelectedEmoji = localStorage.getItem("lastSelectedEmoji") || defaultEmoji;  
 
     // Get recent emojis from localStorage
-    recentEmojis = JSON.parse(localStorage.getItem('recentEmojis')) || [];
+    recentEmojisList = JSON.parse(localStorage.getItem('recentEmojisList')) || [];
+    console.log("loaded recent list: ", recentEmojisList);
 
     // Add starting emojis to recent emojis if no recent emojis exist
-    if (recentEmojis.length == 0) {
-        startEmojiList.forEach(emoji => {
-            updateRecentCharacters(emoji); // Function to add an emoji to recent emojis
+    if (recentEmojisList.length === 0) {
+        startEmojiList.forEach(emojiData => {
+            updateRecentCharacters(emojiData);
         });
     }
 
-    // Create emoji buttons for each recent emoji found
-    recentEmojis.forEach(emoji => {
-        createEmojiButton(emoji); // Function to create an emoji button in the UI
+    // Create emoji buttons for each recent emoji
+    recentEmojisList.forEach(emojiData => {
+        createEmojiButton(emojiData);
     });
 
-    // Update the displayed character selection based on the last selected character
-    updateCharacterSelection(lastSelectedEmoji); 
+    // initialize last selected emoji
+    try {
+        // Try to load the stored emoji data
+        const storedEmojiData = localStorage.getItem('lastSelectedEmoji');
+        if (storedEmojiData) {
+            const parsedEmojiData = JSON.parse(storedEmojiData);
+            // Verify the parsed data has the expected structure
+            switchActiveEmoji(parsedEmojiData);
+            return;
+        }
+    } catch (error) {
+        console.log('Error loading stored emoji, falling back to default:', error);
+    }
+    
+    // If we get here, either no stored emoji or invalid data
+    switchActiveEmoji(defaultEmoji);
 }
 
 // Function to create a button for an emoji
-function createEmojiButton(emoji) {
+function createEmojiButton(emojiData) {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "emoji-button m-1 p-1 btn btn-light shadow-sm";
-    button.dataset.emoji = emoji;
-    button.textContent = emoji;
+    button.dataset.emoji = emojiData.unicode;
+    button.textContent = emojiData.unicode;
 
     // Event listener to store the selected emoji in localStorage
     button.addEventListener("click", () => {
-        // localStorage.setItem("lastSelectedEmoji", emoji);
-        // document.getElementById("selectedEmoji").value = emoji;  // Update hidden input
-        // initEmojiButtons();  // Refresh buttons
-        updateCharacterSelection(emoji);
+        switchActiveEmoji(emojiData);
     });
 
-    {
-         // Find the button by matching the emoji
-        const buttonToRemove = Array.from(emojiButtonsContainer.children).find(button => button.textContent === emoji);
-        
-        // If the button exists, remove it
-        if (buttonToRemove) {
-            emojiButtonsContainer.removeChild(buttonToRemove);
-        }
+    // Remove existing button if present
+    const buttonToRemove = Array.from(emojiButtonsContainer.children)
+        .find(btn => btn.textContent === emojiData.unicode);
+    if (buttonToRemove) {
+        emojiButtonsContainer.removeChild(buttonToRemove);
     }
 
     emojiButtons.push(button);
-    emojiButtonsContainer.insertBefore(button, emojiButtonsContainer.children[1]);
+    emojiButtonsContainer.appendChild(button);
+}
 
-    // todo remove duplicated buttons
+function removeExtraButtons() {
+    while (emojiButtonsContainer.children.length > maxButtonsCount+1) {
+        emojiButtonsContainer.removeChild(emojiButtonsContainer.lastElementChild);
+    }
 }
 
 // Function to remove the last button from emojiButtonsContainer
-function removeEmojiButton() {
-    // const secondButton = emojiButtonsContainer.children[1]; // Get the second button
-    // if (secondButton) {
-    //     emojiButtonsContainer.removeChild(secondButton); // Remove the second button
-    // }
+function removeLastEmojiButton() {
 
     // remove the last button from emojiButtonsContainer
     const lastButton = emojiButtonsContainer.lastElementChild; // Get the last button
@@ -102,65 +133,75 @@ promptBox.addEventListener('input', function() {
     this.style.height = (this.scrollHeight) + 'px'; // Set it based on content
 });
 
-function updateCharacterSelection(lastSelectedEmoji) {
+function switchActiveEmoji(emojiData) {
+    console.log('Switching to emoji:', emojiData);
 
-    // Update the hidden input value with the selected emoji
-    selectedEmoji = lastSelectedEmoji;
-    selectedEmojiInput.value = lastSelectedEmoji;
+    // Convert emoji to Unicode
+    const emoji = emojiData.unicode;
+    const unicodeStr = `U+${emoji.codePointAt(0).toString(16).toUpperCase()}`;
+    console.log("Emoji to Unicode:", unicodeStr);
 
-    // Set a localStorage variable
-    localStorage.setItem('lastSelectedEmoji', lastSelectedEmoji);
+    // Convert Unicode back to emoji
+    const unicodeCode = unicodeStr;
+    const emojiBack = String.fromCodePoint(parseInt(unicodeCode.slice(2), 16));
+    console.log("Unicode to Emoji:", emojiBack);
 
-    // update buttons selection
+    // Update the current emoji selection
+    lastSelectedEmojiData = emojiData;
+    
+    // Update the hidden input value
+    selectedEmojiInput.value = emojiData.unicode;
+    
+    // Store the complete emoji data in localStorage
+    localStorage.setItem('lastSelectedEmoji', JSON.stringify(emojiData));
+    
+    // Update button selection states
     emojiButtons.forEach(button => {
-        if (button.innerHTML == lastSelectedEmoji){
-            button.classList.add('selected'); // Use 'button' instead of 'this'
+        if (button.dataset.emoji === emojiData.unicode) {
+            button.classList.add('selected');
         } else {
-            button.classList.remove('selected'); // Remove 'selected' class from others
+            button.classList.remove('selected');
         }
     });
-
-    // Call the function to clear all chat bubbles
+    
+    // Reset and reload conversation
     clearAllChatBubbles();
-
-    //
-    loadConversationHistory(lastSelectedEmoji);
-
-    // Call this function whenever a new emoji is selected
-    updateRecentCharacters(lastSelectedEmoji);
-
-    console.log("New character selected: " + lastSelectedEmoji);
+    loadConversationHistory(emojiData.unicode);
+    
+    // Update recent characters list if needed
+    updateRecentCharacters(emojiData);
+    
+    console.log("Switched to character:", emojiData.annotation);
 }
 
 // Function to update the recent emoji list
-function updateRecentCharacters(newEmoji) {
+function updateRecentCharacters(emojiData) {
+    // Find the index of the emoji if it exists
+    const existingIndex = recentEmojisList.findIndex(item => item.unicode === emojiData.unicode);
 
-    if (recentEmojis.includes(newEmoji)){
-        console.log("Was already on the list of recents: "+recentEmojis);
+    if (existingIndex !== -1) {
+        console.log("Was already on the list of recents: ", recentEmojisList);
         return;
     }
 
-    // // Remove the emoji if it already exists to prevent duplicates
-    // recentEmojis = recentEmojis.filter(emoji => emoji !== newEmoji);
+    // Add the emoji to the end of the list
+    recentEmojisList.push(emojiData);
 
-    // Add the new emoji to the list
-    recentEmojis.push(newEmoji);
-
-    // Limit to the last x emojis
-    if (recentEmojis.length > 30) {
-        recentEmojis.shift();
-        removeEmojiButton();
-    }
+    // // Limit to the last maxButtonsCount emojis
+    // while (recentEmojisList.length > maxButtonsCount) {
+    //     recentEmojisList.pop();
+    //     // removeLastEmojiButton();
+    // }
 
     // Save the updated list back to localStorage
-    localStorage.setItem('recentEmojis', JSON.stringify(recentEmojis));
-
-    console.log("Recent Emojis: "+recentEmojis);
+    localStorage.setItem('recentEmojisList', JSON.stringify(recentEmojisList));
+    
+    console.log("Recent Emojis:", recentEmojisList);
 }
 
-function addToConversationHistory(character, role, message) {
+function addToConversationHistory(unicode, role, message) {
     // Retrieve the current conversation history for the character from localStorage
-    let conversationHistory = localStorage.getItem(`conversation_${character}`);
+    let conversationHistory = localStorage.getItem(`conversation_${unicode}`);
     let convoJson;
 
     // Check if conversation history exists
@@ -177,21 +218,21 @@ function addToConversationHistory(character, role, message) {
     });
 
     // Save the updated conversation history back to localStorage
-    localStorage.setItem(`conversation_${character}`, JSON.stringify(convoJson));
+    localStorage.setItem(`conversation_${unicode}`, JSON.stringify(convoJson));
 
-    // Print the conversation history in a pretty format
-    console.log(JSON.stringify(convoJson, null, 2)); // Pretty print with 2-space indentation
+    // // Print the conversation history in a pretty format
+    // console.log(JSON.stringify(convoJson, null, 2)); // Pretty print with 2-space indentation
 }
 
 // Function to load conversation history from localStorage for a selected character
-function loadConversationHistory(character) {
-    const convoHistory = localStorage.getItem(`conversation_${character}`);
+function loadConversationHistory(unicode) {
+    const convoHistory = localStorage.getItem(`conversation_${unicode}`);
 
     if (convoHistory) {
         const convoHistoryJSON = JSON.parse(convoHistory);
         createChatBubbles(convoHistoryJSON);
     } else {
-        console.log(`No conversation history found for character: ${character}`);
+        console.log(`No conversation history found for character: ${unicode}`);
     }
 }
 
@@ -244,7 +285,7 @@ function createChatBubbles(conversation) {
             const botLabel = document.createElement('span');
             botLabel.className = 'badge text-muted fs-3 p-2 mb-1 bg-white rounded-pill shadow-sm'; // Bot label styling
             botLabel.style.fontSize = 'large'; // Set font size for bot label
-            botLabel.textContent = selectedEmojiInput.value.split(' ')[0]; // Bot emoji content
+            botLabel.textContent = lastSelectedEmojiData.unicode;
 
             const botMessageText = document.createElement('p');
             botMessageText.id = 'botMessageBox'; // Set ID for bot message
@@ -285,13 +326,6 @@ function renderMessage(message) {
     chatContainer.appendChild(messageRow);
 }
 
-// Example usage inside event listener
-emojiButtons.forEach(button => {
-    button.addEventListener('click', function() {
-        // Call the reusable method
-        updateCharacterSelection(this.dataset.emoji);
-    });
-});
 
 // Ensure a default selection is sent if no button is clicked
 form.addEventListener('submit', function(event) {
@@ -318,7 +352,7 @@ form.addEventListener('submit', async (event) => {
         userMessage = 'Introduce yourself.'
 
     // Add the character (selected emoji) value to the form data
-    formData.append('character', selectedEmoji);  // Add emoji as "character"
+    formData.append('character', formatEmojiInfo(lastSelectedEmojiData));  // Add emoji as "character"
     
     for (const [key, value] of formData.entries()) {
         console.log(`form data: ${key}: ${value}`);
@@ -348,7 +382,7 @@ form.addEventListener('submit', async (event) => {
     botContainer.className = 'row chatBubble';
     botContainer.innerHTML = `
         <div class="col-9 ">
-            <span class="badge p-2 mb-1 bg-white rounded-pill shadow-sm" style="font-size:large">${selectedEmojiInput.value}</span>
+            <span class="badge p-2 mb-1 bg-white rounded-pill shadow-sm" style="font-size:large">${lastSelectedEmojiData.unicode}</span>
             <p id="botMessageBox" class="bg-white p-3 rounded-5 shadow-sm">...</p>
         </div>
     `;
@@ -394,10 +428,10 @@ form.addEventListener('submit', async (event) => {
         botMessage = xhr.responseText;
         console.log(botMessage);
         console.log("DONE!");
-        addToConversationHistory(selectedEmoji, 'bot', botMessage);
+        addToConversationHistory(lastSelectedEmojiData.unicode, 'bot', botMessage);
     }
 
-    addToConversationHistory(selectedEmoji, 'user', userMessage);
+    addToConversationHistory(lastSelectedEmojiData.unicode, 'user', userMessage);
 
     console.log("formData['prompt']: " + userMessage);
     console.log("formData['character']: " + formData.get('character'));
@@ -422,21 +456,21 @@ document.getElementById('prompt').addEventListener('keypress', function(event) {
 });
 
 /////
-
-document.querySelector('emoji-picker').addEventListener('emoji-click', function () {
+document.querySelector('emoji-picker').addEventListener('emoji-click', function(event) {
     console.log('Emoji clicked:', event.detail);
     
-    var modalElement = document.getElementById('exampleModal')
-    var modal = bootstrap.Modal.getInstance(modalElement) // Returns a Bootstrap modal instance
+    var modalElement = document.getElementById('exampleModal');
+    var modal = bootstrap.Modal.getInstance(modalElement);
     modal.hide();
 
-    console.log("PICKER: " + event.detail.unicode + ' ' + event.detail.emoji.shortcodes);
+    const emojiData = {
+        unicode: event.detail.emoji.unicode,
+        annotation: event.detail.emoji.annotation,
+        // shortcodes: event.detail.emoji.shortcodes,
+        tags: event.detail.emoji.tags
+    };
 
-    var lastSelectedEmoji = event.detail.unicode;// + ` (details: ${event.detail.emoji.shortcodes.join(", ")})`;
-
-    updateRecentCharacters(lastSelectedEmoji);
-
-    createEmojiButton(lastSelectedEmoji);
-
-    updateCharacterSelection(lastSelectedEmoji);
+    createEmojiButton(emojiData);
+    switchActiveEmoji(emojiData);
+    updateRecentCharacters(emojiData);
 });
