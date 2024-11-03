@@ -363,7 +363,7 @@ form.addEventListener('submit', async (event) => {
     userContainer.className = 'row chatBubble text-end justify-content-end';
     userContainer.innerHTML = `
         <div class="col-9 align-items-end">
-            <span id="userLabel" class="badge fs-3 p-2 mb-1 bg-primary rounded-pill shadow-sm">User:</span>
+            <span id="userLabel" class="badge p-2 mb-1 bg-primary rounded-pill shadow-sm">User:</span>
             <p class="bg-white p-3 rounded-5 shadow-sm">${userMessage}</p>
         </div>
     `;
