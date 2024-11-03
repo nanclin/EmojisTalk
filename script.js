@@ -13,14 +13,14 @@ const maxButtonsCount = 5;
 
 // Modified default emoji list with metadata
 const startEmojiList = [
-    { unicode: "🐸", annotation: "frog", shortcodes: ":frog:", tags: ["animal", "amphibian"] },
-    { unicode: "🐄", annotation: "cow", shortcodes: ":cow:", tags: ["animal", "farm"] },
-    { unicode: "🍉", annotation: "watermelon", shortcodes: ":watermelon:", tags: ["fruit", "food"] },
-    { unicode: "💩", annotation: "pile of poo", shortcodes: ":poop:", tags: ["funny", "gross"] },
-    { unicode: "👶", annotation: "baby", shortcodes: ":baby:", tags: ["person", "young"] },
-    { unicode: "🧦", annotation: "socks", shortcodes: ":socks:", tags: ["clothing", "feet"] },
-    { unicode: "⚽", annotation: "soccer ball", shortcodes: ":soccer:", tags: ["sports", "ball"] },
-    { unicode: "🎥", annotation: "movie camera", shortcodes: ":movie_camera:", tags: ["film", "video"] }
+    { unicode: "🐸", annotation: "frog", tags: ["animal", "amphibian"] },
+    { unicode: "🐄", annotation: "cow", tags: ["animal", "farm"] },
+    { unicode: "🍉", annotation: "watermelon", tags: ["fruit", "food"] },
+    { unicode: "💩", annotation: "pile of poo", tags: ["funny", "gross"] },
+    { unicode: "👶", annotation: "baby", tags: ["person", "young"] },
+    { unicode: "🧦", annotation: "socks", tags: ["clothing", "feet"] },
+    { unicode: "⚽", annotation: "soccer ball", tags: ["sports", "ball"] },
+    { unicode: "🎥", annotation: "movie camera", tags: ["film", "video"] }
 ];
 
 // Update the default emoji
@@ -31,7 +31,6 @@ function formatEmojiInfo(emojiData) {
     return [
         emojiData.annotation,
         emojiData.unicode,
-        // emojiData.shortcodes,
         ...(emojiData.tags || [])
     ].join(', ');
 }
