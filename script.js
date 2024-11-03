@@ -283,7 +283,7 @@ function createChatBubbles(conversation) {
             botColDiv.className = 'col-9'; // Set column class for bot
 
             const botLabel = document.createElement('span');
-            botLabel.className = 'badge text-muted fs-3 p-2 mb-1 bg-white rounded-pill shadow-sm'; // Bot label styling
+            botLabel.className = 'badge fs-3 p-2 mb-1 bg-white rounded-pill shadow-sm'; // Bot label styling
             botLabel.style.fontSize = 'large'; // Set font size for bot label
             botLabel.textContent = lastSelectedEmojiData.unicode;
 
@@ -364,7 +364,7 @@ form.addEventListener('submit', async (event) => {
     userContainer.className = 'row chatBubble text-end justify-content-end';
     userContainer.innerHTML = `
         <div class="col-9 align-items-end">
-            <span id="userLabel" class="badge p-2 mb-1 bg-primary rounded-pill shadow-sm">User:</span>
+            <span id="userLabel" class="badge fs-3 p-2 mb-1 bg-primary rounded-pill shadow-sm">User:</span>
             <p class="bg-white p-3 rounded-5 shadow-sm">${userMessage}</p>
         </div>
     `;
@@ -382,7 +382,7 @@ form.addEventListener('submit', async (event) => {
     botContainer.className = 'row chatBubble';
     botContainer.innerHTML = `
         <div class="col-9 ">
-            <span class="badge p-2 mb-1 bg-white rounded-pill shadow-sm" style="font-size:large">${lastSelectedEmojiData.unicode}</span>
+            <span class="badge fs-3 p-2 mb-1 bg-white rounded-pill shadow-sm" style="font-size:large">${lastSelectedEmojiData.unicode}</span>
             <p id="botMessageBox" class="bg-white p-3 rounded-5 shadow-sm">...</p>
         </div>
     `;
@@ -466,7 +466,6 @@ document.querySelector('emoji-picker').addEventListener('emoji-click', function(
     const emojiData = {
         unicode: event.detail.emoji.unicode,
         annotation: event.detail.emoji.annotation,
-        // shortcodes: event.detail.emoji.shortcodes,
         tags: event.detail.emoji.tags
     };
 

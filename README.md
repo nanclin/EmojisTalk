@@ -9,7 +9,7 @@
 - [ngrok link](https://jawfish-feasible-properly.ngrok-free.app/emojistalk)
 - ✅ add additional tags and information about emoji if available, or for handcrafted fixes (like halo 😇 emoji should contain info that it's a smiley face, not just halo object)
 - randomize default daily list
-- fix bot button sizes and text
+- ✅ fix bot button sizes and text
 - simulate taking time to respond like a real human
 - add info about how long was it from last conversation
 - add "export conversation" button
