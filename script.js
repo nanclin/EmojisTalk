@@ -37,6 +37,9 @@ function formatEmojiInfo(emojiData) {
 
 document.addEventListener('DOMContentLoaded', function() {
     initEmojiButtons();
+
+    // Call once on page load
+    adjustBottomSpace();
 });
 
 // Function to initialize emoji buttons
@@ -130,7 +133,18 @@ function clearAllChatBubbles() {
 promptBox.addEventListener('input', function() {
     this.style.height = 'auto'; // Reset the height
     this.style.height = (this.scrollHeight) + 'px'; // Set it based on content
+
+    // adjust space and scroll down when typing
+    adjustBottomSpace();
 });
+
+function adjustBottomSpace() {
+    const promptBoxHeight = parseInt(window.getComputedStyle(promptBox).height);
+    const bottomSpaceDiv = document.querySelector('#bottom-space');
+    
+    bottomSpaceDiv.style.height = (50 + promptBoxHeight) + 'px';
+    window.scrollTo(0, document.body.scrollHeight);
+}
 
 function switchActiveEmoji(emojiData) {
     console.log('Switching to emoji:', emojiData);
@@ -169,6 +183,9 @@ function switchActiveEmoji(emojiData) {
     
     // Update recent characters list if needed
     updateRecentCharacters(emojiData);
+
+    // scroll down to the bottom of the chat
+    window.scrollTo(0, document.body.scrollHeight);
     
     console.log("Switched to character:", emojiData.annotation);
 }
@@ -230,6 +247,7 @@ function loadConversationHistory(unicode) {
     if (convoHistory) {
         const convoHistoryJSON = JSON.parse(convoHistory);
         createChatBubbles(convoHistoryJSON);
+        console.log(`Convo history for character: ${unicode} loaded!`);
     } else {
         console.log(`No conversation history found for character: ${unicode}`);
     }
@@ -421,6 +439,9 @@ form.addEventListener('submit', async (event) => {
         document.getElementById('botMessageBox').textContent = xhr.responseText;
         loadingSpinner.classList.add('d-none'); // Hide spinner
         console.log("on progress... " + loadingSpinner);
+
+        // adjust space needed and scroll when new text is streamed
+        adjustBottomSpace();
     };
 
     xhr.onload = function(){

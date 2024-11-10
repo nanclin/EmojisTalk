@@ -174,7 +174,7 @@
         </div>
 
         <!-- TODO: scale this dynamically based on prompt textarea height, so that the messages are pushed up, so you can see whole convo -->
-        <div class="container" style="height: 100px;">
+        <div id="bottom-space" class="container" style="height: 100px;">
         </div>
 
         <!-- Bootstrap Spinner -->
