@@ -2,9 +2,9 @@
 
 ## NOTES
 
-- 👉 disable input while loading response
 - 👉 fix messages persistancy
 - 👉 add colors like in [qewie](https://x.com/josephpalbanese/status/1841522918460620940?s=46) (use bootstrap color modes themes)
+- ✅ disable input while loading response
 - ✅ add "scroll back top button"
 - add emoji selector row attached to the top of the screen
 - scroll bar toggles on/off, when selecting emoji with convo histroy vs without, and scales whole page

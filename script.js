@@ -376,6 +376,8 @@ form.addEventListener('submit', async (event) => {
         console.log(`form data: ${key}: ${value}`);
     }
 
+    enableInput(false);
+
     // create new user message from input message
 
     var userContainer = document.createElement('div');
@@ -450,6 +452,7 @@ form.addEventListener('submit', async (event) => {
         console.log(botMessage);
         console.log("DONE!");
         addToConversationHistory(lastSelectedEmojiData.unicode, 'bot', botMessage);
+        enableInput(true);
     }
 
     addToConversationHistory(lastSelectedEmojiData.unicode, 'user', userMessage);
@@ -467,6 +470,12 @@ form.addEventListener('submit', async (event) => {
         "stream": true
     }));
 });
+
+function enableInput(enable) {
+    promptBox.disabled = !enable;
+    document.getElementById('submit-btn').disabled = !enable;
+    promptBox.placeholder = enable ? "Type your message..." : '';
+}
 
 // JavaScript to handle form submission on Enter key press in the text input
 document.getElementById('prompt').addEventListener('keypress', function(event) {

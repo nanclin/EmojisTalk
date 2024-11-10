@@ -169,7 +169,7 @@
                         </textarea>
                     </div>
                     <div class="col-auto g-3">
-                        <input type="submit" value="SAY" class="form-control rounded-5 p-3 m-0 btn btn-primary shadow-lg">
+                        <input id="submit-btn" type="submit" value="SAY" class="form-control rounded-5 p-3 m-0 btn btn-primary shadow-lg">
                     </div>
                 </div>
             </form>
