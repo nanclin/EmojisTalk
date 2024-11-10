@@ -70,6 +70,8 @@
         <!-- Area to display the PHP output -->
         <pre id="output"></pre>
 
+        <!-- scroll back to button -->
+        <button id="scrollTopButton" onclick="scrollToTop()">↑</button>
 
         <!-- title -->
         <div class="container-fluid p-0">

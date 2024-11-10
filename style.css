@@ -65,3 +65,23 @@ span.input-group-text {
         width: 60%;
     }
 } 
+
+#scrollTopButton {
+    position: fixed;
+    bottom: 138px;
+    right: 10px;
+    height: 50px;
+    width: 50px;
+    display: none; /* Hide initially */
+    padding: 10px 15px;
+    font-size: 24px;
+    background-color: none;
+    color: #999;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+#scrollTopButton:hover {
+    color: #333;
+}

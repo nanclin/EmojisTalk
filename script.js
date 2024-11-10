@@ -3,6 +3,7 @@ const selectedEmojiInput = document.getElementById('selectedEmoji');
 const emojiButtonsContainer = document.getElementById("emojiButtons");
 const form = document.querySelector('form');
 const loadingSpinner = document.getElementById('loadingSpinner');
+const scrollTopButton = document.getElementById("scrollTopButton");
 let selectedEmojiDisplay = document.getElementById('selectedEmojiDisplay');
 const promptBox = document.getElementById('prompt');
 let botMessageBoxReference = null;
@@ -493,3 +494,24 @@ document.querySelector('emoji-picker').addEventListener('emoji-click', function(
     switchActiveEmoji(emojiData);
     updateRecentCharacters(emojiData);
 });
+
+// Show or hide the button based on scroll position
+window.onscroll = function() {
+    toggleScrollButton()
+    console.log("scroll...");
+};
+
+function toggleScrollButton() {
+    console.log("scroll top: ", document.documentElement.scrollTop);
+    console.log("scrollTopButton: ", scrollTopButton);
+    if (document.documentElement.scrollTop > 300) {
+        scrollTopButton.style.display = "block";
+    } else {
+        scrollTopButton.style.display = "none";
+    }
+}
+
+// Scroll smoothly back to the top when the button is clicked
+function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
