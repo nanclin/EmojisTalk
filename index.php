@@ -154,10 +154,19 @@
             <!-- TODO: Find a way to remove form from here, and move it to the bottom of messages -->
             <form action="process.php" method="POST" id="emojiForm">
                 <div class="row bg-white fixed-bottom p-3 align-items-center justify-content-center">
-                    <div class="col-6 g-3">
-                        <textarea name="prompt" id="prompt" type="text" rows="1" value="SAY" class="form-control bg-white form-text rounded-1 p-3 m-0 shadow-lg" style="resize: none;"></textarea>
+                    <div class="col g-3">
+                        <textarea
+                            placeholder="Type your message..."
+                            name="prompt"
+                            id="prompt"
+                            type="text"
+                            rows="2"
+                            value="SAY"
+                            class="form-control bg-white form-text rounded-1 p-3 m-0 shadow-lg"
+                            style="resize: none;">
+                        </textarea>
                     </div>
-                    <div class="col-1 g-3">
+                    <div class="col-auto g-3">
                         <input type="submit" value="SAY" class="form-control rounded-5 p-3 m-0 btn btn-primary shadow-lg">
                     </div>
                 </div>

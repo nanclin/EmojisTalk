@@ -396,12 +396,12 @@ form.addEventListener('submit', async (event) => {
     // reset prompt
     promptBox.value = '';
     promptBox.style.height = 'auto';  // Reset height to default
-    // TODO fix slim input
+    promptBox.rows = '2';
     // TODO expand page height together with the textarea height
 
 
     // Optionally, if you want to reapply dynamic resizing after clearing
-    promptBox.style.height = promptBox.scrollHeight*0.5 + 'px'; // Adjust height to fit any new content
+    promptBox.style.height = promptBox.scrollHeight + 'px'; // Adjust height to fit any new content
 
 
     // const element = document.getElementById('chat');
