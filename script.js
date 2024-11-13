@@ -481,7 +481,7 @@ function enableInput(enable) {
 document.getElementById('prompt').addEventListener('keypress', function(event) {
     if (event.key === 'Enter') {
         event.preventDefault(); // Prevent the default Enter key behavior
-        form.querySelector('input[type="submit"]').click(); // Trigger form submission programmatically
+        form.querySelector('button[type="submit"]').click(); // Trigger form submission programmatically
     }
 });
 
